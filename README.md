@@ -140,6 +140,70 @@
     .result .score { font-size: 3rem; font-weight: 700; color: var(--accent); margin: 0.5rem 0; }
     .result p { color: var(--muted); margin-bottom: 1rem; }
 
+    /* Card entrance animation */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quiz { animation: rise 0.5s ease; }
+
+    /* Small label above the title */
+    .badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Gradient progress bar */
+    .progress-fill {
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+    }
+
+    /* Answer options with letter markers */
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .option .letter {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #eef2ff;
+      color: var(--accent);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .option:hover:not(:disabled) .letter {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .option.correct .letter { background: var(--correct); color: #fff; }
+    .option.wrong .letter { background: var(--wrong); color: #fff; }
+
+    /* Gradient score on the results page */
+    .result .score {
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
     @media (max-width: 480px) {
       .quiz { padding: 1.25rem; }
       .quiz h1 { font-size: 1.25rem; }
@@ -149,6 +213,7 @@
 <body>
 
   <main class="quiz">
+    <span class="badge">Quiz Time</span>
     <h1>Web Development Quiz</h1>
     <p class="subtitle">Test what you know about HTML, CSS, and JavaScript.</p>
 
@@ -246,7 +311,14 @@
       current.options.forEach((text, index) => {
         const button = document.createElement("button");
         button.className = "option";
-        button.textContent = text;
+        const letter = document.createElement("span");
+        letter.className = "letter";
+        letter.textContent = String.fromCharCode(65 + index); // 65 is the code for "A"
+
+        const label = document.createElement("span");
+        label.textContent = text;
+
+        button.append(letter, label);
         button.addEventListener("click", () => checkAnswer(index));
         optionsList.appendChild(button);
       });
